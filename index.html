@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        function GetPosts() {
+            Promise.all(
+                [
+                    fetch('https://northwind.vercel.app/api/suppliers')
+                    .then(res => res.json())
+                    .then(d => console.log(d)),
+                    fetch('https://northwind.vercel.app/api/orders')
+                    .then(res => res.json())
+                    .then(d => console.log(d)),
+                ]
+            )
+        }
+        GetPosts()
+
+        function AddPostToSuppliers(companyName, contactName, contactTitle, street, city, region, postalCode, country,
+            phone) {
+            fetch('https://northwind.vercel.app/api/suppliers', {
+                    method: "POST",
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        companyName: companyName,
+                        contactName: contactName,
+                        contactTitle: contactTitle,
+                        address: {
+                            street: street,
+                            city: city,
+                            region: region,
+                            postalCode: postalCode,
+                            country: country,
+                            phone: phone
+                        }
+                    })
+                })
+                .then(res => res.json())
+                .then(d => console.log(d))
+        }
+        AddPostToSuppliers('Saida', 'Seide', 'Humbe', 'Cerkassi', 'Sumqayit', 'Azerbaycan', 'AZ044', 'Baki',
+            '0777645548')
+
+            today = moment()
+        function AddPostsToOrders(customerId, employeeId, shipVia, freight, shipName, street, city, region, postalCode,
+            country, productId, unitPrice, quantity, discount) {
+  
+            fetch('https://northwind.vercel.app/api/orders', {
+                    method: "POST",
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        customerId: customerId,
+                        employeeId: employeeId,
+                        orderDate: moment().format('DD-MM-YYYY HH:mm:ss'),
+                        requiredDate: moment(today, 'DD-MM-YYYY').add(5, 'days').format('DD-MM-YYYY'),
+                        shipVia: shipVia,
+                        freight: freight,
+                        shipName: shipName,
+                        street: street,
+                        city: city,
+                        region: region,
+                        postalCode: postalCode,
+                        country: country,
+                        details: {
+                            productId: productId,
+                            unitPrice: unitPrice,
+                            quantity: quantity,
+                            discount: discount
+                        }
+                    })
+                })
+                .then(res => res.json())
+                .then(d => console.log(d))
+
+        }
+        AddPostsToOrders('Saide', 3, 4, 77, 'Seide', 'Cerkassi', 'Sumqayit', 'Azerbaycan', 'Az044',
+            'Baki', 14, 39, 9, 0)
+    </script>
+</body>
+
+</html>
